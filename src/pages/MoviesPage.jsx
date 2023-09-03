@@ -1,4 +1,21 @@
+import { useSearchParams } from 'react-router-dom';
+
 const MoviesPage = () => {
-    return <div>MoviesPage</div>;
+  const [searchParams, setSearchParams] = useSearchParams('');
+  const searchValue = searchParams.get('query') ?? '';
+
+  const updateQueryString = event => {
+    if (event.target.value === '') {
+      return setSearchParams({});
+    }
+    setSearchParams({ query: event.target.value });
   };
-  export default MoviesPage;
+
+  return (
+    <div>
+      <input type="text" value={searchValue} onChange={updateQueryString} />
+      <button>Search</button>
+    </div>
+  );
+};
+export default MoviesPage;

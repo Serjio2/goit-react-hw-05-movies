@@ -1,5 +1,5 @@
 import HomePage from 'pages/HomePage';
-import MovieDetails from 'pages/MovieDetails';
+import MovieDetails from 'pages/MovieDetailsPage';
 import MoviesPage from 'pages/MoviesPage';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Cast } from './Cast';
@@ -15,9 +15,6 @@ export const App = () => {
           </li>
           <li>
             <Link to="/movies">Movies</Link>
-          </li>
-          <li>
-            <Link to="/movies/:movieId">MovieDetails</Link>
           </li>
         </ul>
       </nav>
