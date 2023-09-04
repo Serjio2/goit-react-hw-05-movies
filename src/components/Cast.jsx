@@ -6,6 +6,8 @@ export const Cast = () => {
   const [actors, setActors] = useState(null);
   const { movieId } = useParams();
 
+  // console.log(actors)
+
   useEffect(() => {
     const key = 'a8702b4fc1615ccb68ca9d5f4ec2dee9';
 
@@ -27,7 +29,7 @@ export const Cast = () => {
         <ul>
           {actors.map(actor => (
             <div key={actor.id}>
-              <img src={actor.profile_path} alt={actor.name}/>
+              <img src={'https://image.tmdb.org/t/p/w92' + actor.profile_path} alt={actor.name}/>
               <li >{actor.name}</li>
               <p>{actor.character}</p>
             </div>

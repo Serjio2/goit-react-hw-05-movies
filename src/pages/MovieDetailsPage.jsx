@@ -2,15 +2,17 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 
-const MovieDetails = () => {
+const MovieDetailsPage = () => {
   const [singleMovie, setSingleMovie] = useState(null);
   const { movieId } = useParams();
   const location = useLocation();
+  const backLinkHref = location.state?.from ?? '/';
 
   useEffect(() => {
     const key = 'a8702b4fc1615ccb68ca9d5f4ec2dee9';
 
-    axios.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${key}`)
+    axios
+      .get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${key}`)
       .then(response => {
         setSingleMovie(response.data);
       })
@@ -23,8 +25,13 @@ const MovieDetails = () => {
     <>
       {singleMovie && (
         <div>
-          <Link to={location.state.from}>Go back</Link>
-          <img src={singleMovie.poster_path} alt={singleMovie.original_title}></img>
+          <div>
+          <Link to={backLinkHref}>Go back</Link>
+          </div>
+          <img
+            src={'https://image.tmdb.org/t/p/w300' + singleMovie.poster_path}
+            alt={singleMovie.original_title}
+          ></img>
           <h2>
             {singleMovie.original_title}({singleMovie.release_date})
           </h2>
@@ -39,7 +46,7 @@ const MovieDetails = () => {
           </ul>
         </div>
       )}
-        <p>Additional Information</p>
+      <p>Additional Information</p>
       <ul>
         <li>
           <Link to="cast">Cast</Link>
@@ -52,4 +59,4 @@ const MovieDetails = () => {
     </>
   );
 };
-export default MovieDetails;
+export default MovieDetailsPage;

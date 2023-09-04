@@ -1,5 +1,5 @@
 import HomePage from 'pages/HomePage';
-import MovieDetails from 'pages/MovieDetailsPage';
+import MovieDetailsPage from 'pages/MovieDetailsPage';
 import MoviesPage from 'pages/MoviesPage';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Cast } from './Cast';
@@ -21,7 +21,7 @@ export const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/movies" element={<MoviesPage />} />
-        <Route path="/movies/:movieId" element={<MovieDetails />}>
+        <Route path="/movies/:movieId" element={<MovieDetailsPage />}>
           <Route path="cast" element={<Cast />} />
           <Route path="reviews" element={<Reviews />} />
         </Route>
