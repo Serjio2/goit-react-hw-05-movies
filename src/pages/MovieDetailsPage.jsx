@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 
 const MovieDetailsPage = () => {
+  const date = new Date();
   const [singleMovie, setSingleMovie] = useState(null);
   const { movieId } = useParams();
   const location = useLocation();
@@ -33,9 +34,9 @@ const MovieDetailsPage = () => {
             alt={singleMovie.original_title}
           ></img>
           <h2>
-            {singleMovie.original_title}({singleMovie.release_date})
+            {singleMovie.original_title} ({date.getFullYear( singleMovie.release_date)})
           </h2>
-          <p>User Score:{singleMovie.vote_average}%</p>
+          <p>User Score: {Math.round(singleMovie.vote_average*10)}%</p>
           <h3>Overview</h3>
           <p>{singleMovie.overview}</p>
           <h3>Genres</h3>
