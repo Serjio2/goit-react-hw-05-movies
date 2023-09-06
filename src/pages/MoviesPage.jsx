@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
 const MoviesPage = () => {
-  const [query, setQuery] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams('');
+  const [searchedMovies, setSearchedMovies] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-  const searchValue = searchParams.get('query') ?? '';
+  const query = searchParams.get('query') ?? '';
 
   const updateQueryString = event => {
     if (event.target.value === '') {
@@ -15,32 +15,40 @@ const MoviesPage = () => {
     setSearchParams({ query: event.target.value });
   };
 
-  const searchMovies = () => {};
+  const searchMovies = event => {
+    event.preventDefault();
+    setSearchParams({ query: event.target.elements.searchMovie.value})
+  };
 
   useEffect(() => {
-    const key = 'a8702b4fc1615ccb68ca9d5f4ec2dee9';
+    function fetchMovies() {
+      const key = 'a8702b4fc1615ccb68ca9d5f4ec2dee9';
 
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?query=${searchValue}&api_key=${key}`
-      )
-      .then(response => {
-        setQuery(response.data.results);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, [searchValue]);
+      axios
+        .get(
+          `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=${key}`
+        )
+        .then(response => {
+          setSearchedMovies(response.data.results);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+    fetchMovies()
+  }, [query]);
 
   return (
     <div>
-      <input type="text" value={searchValue} onChange={updateQueryString} />
-      <button onClick={searchMovies}>Search</button>
+      <form onSubmit={searchMovies}>
+        <input type="text" name='searchMovie' value={query} onChange={updateQueryString}/>
+        <button type="submit">Search</button>
+      </form>
       <ul>
-        {query.map(item => (
-          <li key={item.id}>
-            <Link to={`/movies/${item.id}`} state={{ from: location }}>
-              {item.title}
+        {searchedMovies.map(movie => (
+          <li key={movie.id}>
+            <Link to={`/movies/${movie.id}`} state={{ from: location }}>
+              {movie.title}
             </Link>
           </li>
         ))}
