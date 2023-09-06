@@ -15,6 +15,8 @@ const MoviesPage = () => {
     setSearchParams({ query: event.target.value });
   };
 
+  const searchMovies = () => {};
+
   useEffect(() => {
     const key = 'a8702b4fc1615ccb68ca9d5f4ec2dee9';
 
@@ -33,7 +35,7 @@ const MoviesPage = () => {
   return (
     <div>
       <input type="text" value={searchValue} onChange={updateQueryString} />
-      <button>Search</button>
+      <button onClick={searchMovies}>Search</button>
       <ul>
         {query.map(item => (
           <li key={item.id}>
