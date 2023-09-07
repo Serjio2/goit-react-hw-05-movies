@@ -8,16 +8,22 @@ const MoviesPage = () => {
   const location = useLocation();
   const query = searchParams.get('query') ?? '';
 
-  const updateQueryString = event => {
-    if (event.target.value === '') {
-      return setSearchParams({});
-    }
-    setSearchParams({ query: event.target.value });
-  };
+  // const updateQueryString = event => {
+  //   if (event.target.value === '') {
+  //     return setSearchParams({});
+  //   }
+  //   setSearchParams({ query: event.target.value });
+  // };
 
   const searchMovies = event => {
     event.preventDefault();
+    
+    if (event.target.elements.searchMovie.value === '') {
+      return setSearchParams({});
+    } else {
+    
     setSearchParams({ query: event.target.elements.searchMovie.value})
+    }
   };
 
   useEffect(() => {
@@ -41,7 +47,7 @@ const MoviesPage = () => {
   return (
     <div>
       <form onSubmit={searchMovies}>
-        <input type="text" name='searchMovie' value={query} onChange={updateQueryString}/>
+        <input type="text" name='searchMovie'/>
         <button type="submit">Search</button>
       </form>
       <ul>

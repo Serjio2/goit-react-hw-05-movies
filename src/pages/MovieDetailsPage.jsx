@@ -50,10 +50,10 @@ const MovieDetailsPage = () => {
       <p>Additional Information</p>
       <ul>
         <li>
-          <Link to="cast">Cast</Link>
+          <Link to="cast" state={location.state}>Cast</Link>
         </li>
         <li>
-          <Link to="reviews">Reviews</Link>
+          <Link to="reviews" state={location.state}>Reviews</Link>
         </li>
       </ul>
       <Outlet />
