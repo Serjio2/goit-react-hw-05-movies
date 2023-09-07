@@ -1,23 +1,25 @@
 import HomePage from 'pages/HomePage';
 import MovieDetailsPage from 'pages/MovieDetailsPage';
 import MoviesPage from 'pages/MoviesPage';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, NavLink } from 'react-router-dom';
 import { Cast } from './Cast';
 import { Reviews } from './Reviews';
+import { Container } from './Container.styled';
+import { Nav } from './Nav.styled';
 
 export const App = () => {
   return (
-    <>
-      <nav>
+    <Container>
+      <Nav>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <Link to="/movies">Movies</Link>
+            <NavLink to="/movies">Movies</NavLink>
           </li>
         </ul>
-      </nav>
+      </Nav>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/movies" element={<MoviesPage />} />
@@ -26,6 +28,6 @@ export const App = () => {
           <Route path="reviews" element={<Reviews />} />
         </Route>
       </Routes>
-    </>
+    </Container>
   );
 };

@@ -1,28 +1,31 @@
-import axios from 'axios';
+import { Layout } from 'components/Layout.styled';
+import { Loader } from 'components/Loader';
+import { fetchHomePage } from 'components/api';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const key = 'a8702b4fc1615ccb68ca9d5f4ec2dee9';
-
-    axios
-      .get(`https://api.themoviedb.org/3/trending/movie/day?api_key=${key}`)
-
+    setLoading(true);
+    try {
+      fetchHomePage()
       .then(response => {
         setMovies(response.data.results);
-      })
-      .catch(error => {
-        console.error(error);
+        setLoading(false);
       });
+    } catch (error) {
+      console.error(error);
+    } 
   }, []);
 
   return (
-    <div>
+    <Layout>
       <h2>Trending today</h2>
+      {loading && <Loader/>}
       <ul>
         {movies.map(({ id, title }) => (
           <li key={id}>
@@ -32,7 +35,7 @@ const HomePage = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </Layout>
   );
 };
 export default HomePage;

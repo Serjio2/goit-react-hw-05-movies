@@ -1,63 +1,87 @@
-import axios from 'axios';
+import {
+  AdditionalInfo,
+  ContainerMovie,
+  DescriptionMovie,
+  GoBackBtn,
+  LayoutMovieDatalisPage,
+} from 'components/LayoutMovieDetailsPage.styled';
+import { fetchMovieId } from 'components/api';
 import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { Loader } from 'components/Loader';
+
 
 const MovieDetailsPage = () => {
   const date = new Date();
   const [singleMovie, setSingleMovie] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { movieId } = useParams();
   const location = useLocation();
+
   const backLinkHref = location.state?.from ?? '/';
 
   useEffect(() => {
-    const key = 'a8702b4fc1615ccb68ca9d5f4ec2dee9';
-
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${key}`)
-      .then(response => {
+    setLoading(true)
+    try {
+      fetchMovieId(movieId).then(response => {
         setSingleMovie(response.data);
-      })
-      .catch(error => {
-        console.error(error);
+        setLoading(false)
       });
+    } catch (error) {
+      console.error(error);
+    }
   }, [movieId]);
 
   return (
-    <>
+    <LayoutMovieDatalisPage>
+      {loading && <Loader/>}
       {singleMovie && (
-        <div>
-          <div>
-          <Link to={backLinkHref}>Go back</Link>
-          </div>
-          <img
-            src={'https://image.tmdb.org/t/p/w300' + singleMovie.poster_path}
-            alt={singleMovie.original_title}
-          ></img>
-          <h2>
-            {singleMovie.original_title} ({date.getFullYear( singleMovie.release_date)})
-          </h2>
-          <p>User Score: {Math.round(singleMovie.vote_average*10)}%</p>
-          <h3>Overview</h3>
-          <p>{singleMovie.overview}</p>
-          <h3>Genres</h3>
-          <ul>
-            {singleMovie.genres.map(genre => (
-              <li key={genre.id}>{genre.name}</li>
-            ))}
-          </ul>
-        </div>
+        <>
+          <GoBackBtn>
+            <Link to={backLinkHref}><AiOutlineArrowLeft/>Go back</Link>
+          </GoBackBtn>
+          <ContainerMovie>
+            <img
+              src={'https://image.tmdb.org/t/p/w300' + singleMovie.poster_path}
+              alt={singleMovie.original_title}
+            ></img>
+            <DescriptionMovie>
+              <h2>
+                {singleMovie.original_title} (
+                {date.getFullYear(singleMovie.release_date)})
+              </h2>
+              <p>User Score: {Math.round(singleMovie.vote_average * 10)}%</p>
+              <h3>Overview</h3>
+              <p>{singleMovie.overview}</p>
+              <h3>Genres</h3>
+              <ul>
+                {singleMovie.genres.map(genre => (
+                  <li key={genre.id}>{genre.name}</li>
+                ))}
+              </ul>
+            </DescriptionMovie>
+          </ContainerMovie>
+        </>
       )}
+      <AdditionalInfo>
       <p>Additional Information</p>
       <ul>
         <li>
-          <Link to="cast" state={location.state}>Cast</Link>
+          <Link to="cast" state={location.state}>
+            Cast
+          </Link>
         </li>
         <li>
-          <Link to="reviews" state={location.state}>Reviews</Link>
+          <Link to="reviews" state={location.state}>
+            Reviews
+          </Link>
         </li>
       </ul>
+      <hr/>
       <Outlet />
-    </>
+      </AdditionalInfo>
+    </LayoutMovieDatalisPage>
   );
 };
 export default MovieDetailsPage;

@@ -1,55 +1,45 @@
-import axios from 'axios';
+import { Layout } from 'components/Layout.styled';
+import { Loader } from 'components/Loader';
+import { fetchFindMovies } from 'components/api';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
 const MoviesPage = () => {
   const [searchedMovies, setSearchedMovies] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const query = searchParams.get('query') ?? '';
 
-  // const updateQueryString = event => {
-  //   if (event.target.value === '') {
-  //     return setSearchParams({});
-  //   }
-  //   setSearchParams({ query: event.target.value });
-  // };
-
   const searchMovies = event => {
     event.preventDefault();
-    
+
     if (event.target.elements.searchMovie.value === '') {
       return setSearchParams({});
     } else {
-    
-    setSearchParams({ query: event.target.elements.searchMovie.value})
+      setSearchParams({ query: event.target.elements.searchMovie.value });
     }
   };
 
   useEffect(() => {
-    function fetchMovies() {
-      const key = 'a8702b4fc1615ccb68ca9d5f4ec2dee9';
-
-      axios
-        .get(
-          `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=${key}`
-        )
-        .then(response => {
-          setSearchedMovies(response.data.results);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+    setLoading(true);
+    try {
+      fetchFindMovies(query).then(response => {
+        setSearchedMovies(response.data.results);
+        setLoading(false);
+      });
+    } catch (error) {
+      console.error(error);
     }
-    fetchMovies()
   }, [query]);
 
   return (
-    <div>
+    <Layout>
       <form onSubmit={searchMovies}>
-        <input type="text" name='searchMovie'/>
+        <input type="text" name="searchMovie" placeholder="input movie" />
         <button type="submit">Search</button>
       </form>
+      {loading && <Loader/>}
       <ul>
         {searchedMovies.map(movie => (
           <li key={movie.id}>
@@ -59,7 +49,7 @@ const MoviesPage = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </Layout>
   );
 };
 export default MoviesPage;
