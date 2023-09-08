@@ -1,5 +1,4 @@
 import { Layout } from 'components/Layout.styled';
-import { Loader } from 'components/Loader';
 import { fetchFindMovies } from 'components/api';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
@@ -7,7 +6,6 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 const MoviesPage = () => {
   const [searchedMovies, setSearchedMovies] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const query = searchParams.get('query') ?? '';
 
@@ -22,11 +20,9 @@ const MoviesPage = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     try {
       fetchFindMovies(query).then(response => {
         setSearchedMovies(response.data.results);
-        setLoading(false);
       });
     } catch (error) {
       console.error(error);
@@ -39,7 +35,6 @@ const MoviesPage = () => {
         <input type="text" name="searchMovie" placeholder="input movie" />
         <button type="submit">Search</button>
       </form>
-      {loading && <Loader/>}
       <ul>
         {searchedMovies.map(movie => (
           <li key={movie.id}>

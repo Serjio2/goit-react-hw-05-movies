@@ -3,30 +3,25 @@ import {
   ContainerMovie,
   DescriptionMovie,
   GoBackBtn,
-  LayoutMovieDatalisPage,
 } from 'components/LayoutMovieDetailsPage.styled';
 import { fetchMovieId } from 'components/api';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { Loader } from 'components/Loader';
 
-
 const MovieDetailsPage = () => {
   const date = new Date();
   const [singleMovie, setSingleMovie] = useState(null);
-  const [loading, setLoading] = useState(false);
   const { movieId } = useParams();
   const location = useLocation();
 
   const backLinkHref = location.state?.from ?? '/';
 
   useEffect(() => {
-    setLoading(true)
     try {
       fetchMovieId(movieId).then(response => {
         setSingleMovie(response.data);
-        setLoading(false)
       });
     } catch (error) {
       console.error(error);
@@ -34,12 +29,14 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   return (
-    <LayoutMovieDatalisPage>
-      {loading && <Loader/>}
+    <>
       {singleMovie && (
         <>
           <GoBackBtn>
-            <Link to={backLinkHref}><AiOutlineArrowLeft/>Go back</Link>
+            <Link to={backLinkHref}>
+              <AiOutlineArrowLeft />
+              Go back
+            </Link>
           </GoBackBtn>
           <ContainerMovie>
             <img
@@ -65,23 +62,25 @@ const MovieDetailsPage = () => {
         </>
       )}
       <AdditionalInfo>
-      <p>Additional Information</p>
-      <ul>
-        <li>
-          <Link to="cast" state={location.state}>
-            Cast
-          </Link>
-        </li>
-        <li>
-          <Link to="reviews" state={location.state}>
-            Reviews
-          </Link>
-        </li>
-      </ul>
-      <hr/>
-      <Outlet />
+        <p>Additional Information</p>
+        <ul>
+          <li>
+            <Link to="cast" state={location.state}>
+              Cast
+            </Link>
+          </li>
+          <li>
+            <Link to="reviews" state={location.state}>
+              Reviews
+            </Link>
+          </li>
+        </ul>
+        <hr />
+        <Suspense fallback={<Loader />}>
+          <Outlet />
+        </Suspense>
       </AdditionalInfo>
-    </LayoutMovieDatalisPage>
+    </>
   );
 };
 export default MovieDetailsPage;
